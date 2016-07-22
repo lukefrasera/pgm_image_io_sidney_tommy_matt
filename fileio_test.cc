@@ -3,13 +3,14 @@
 #include <fstream>
 #include <stdio.h>
 #include <cstdlib>
+#include <stdint.h>
 
 struct PgmImage {
   std::string type;
   std::string comment;
   int width, height, max_val;
   unsigned char *data;
-  char data_1;
+  char data_1[100000];
 };
 
 bool InitPGMImage(PgmImage &image);
@@ -132,10 +133,10 @@ bool ReadPGMImage(PgmImage &image, std::string filename, std::string output_file
   ReadPGMImageHeader(image, image.type, image.width, image.height, image.max_val, image_in);
 
   // Read Data
-  
+
   char data_1[image.width*image.height];
   image_in.read(data_1, image.width*image.height);
-  // std::cout << data_1 << std::endl;
+  std::cout << data_1 << std::endl;
 
   image_in.close();
   std::cout << "Image is closing" << std::endl;
