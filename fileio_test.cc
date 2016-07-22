@@ -16,7 +16,7 @@ bool InitPGMImage(PgmImage &image);
 
 bool AllocatePGMImage(PgmImage &image, int max_val, int w, int h);
 
-bool ReadPGMImageHeader(std::string image_type, int &w, int &h, int &max_val, std::ifstream &fin);
+bool ReadPGMImageHeader(PgmImage &image, std::string image_type, int &w, int &h, int &max_val, std::ifstream &fin);
 
 bool ReadPGMImage(PgmImage &image, std::string filename, std::string output_filename);
 
@@ -88,22 +88,8 @@ bool DeletePGMImage(PgmImage &image) {
   return true;
 }
 
-bool ReadPGMImageHeader(std::string type, int &w, int &h, int &max_val, std::ifstream &image_in) {
-  
-  return true;
-}
-
-bool ReadPGMImage(PgmImage &image, std::string filename, std::string output_filename) {
-  // Open File to read
-  std::ifstream image_in(filename.c_str(), std::ifstream::binary);
-
-  if (image_in.is_open()) {
-    std::cout << "Image is opening" << std::endl;
-  } else {
-    std::cout << "Image isn't opening" << std::endl;
-  }
-  
-  // Read Image header
+bool ReadPGMImageHeader(PgmImage &image, std::string type, int &w, int &h, int &max_val, std::ifstream &image_in) {
+   // Read Image header
 
   // Read Image Type
   getline(image_in, image.type,'\n');
@@ -128,20 +114,32 @@ bool ReadPGMImage(PgmImage &image, std::string filename, std::string output_file
   image_in.get();
   std::cout << image.max_val << std::endl;
 
+  return true;
+}
+
+bool ReadPGMImage(PgmImage &image, std::string filename, std::string output_filename) {
+  // Open File to read
+  std::ifstream image_in(filename.c_str(), std::ifstream::binary);
+
+  if (image_in.is_open()) {
+    std::cout << "Image is opening" << std::endl;
+  } else {
+    std::cout << "Image isn't opening" << std::endl;
+  }
+
+  // Read Header 
+
+  ReadPGMImageHeader(image, image.type, image.width, image.height, image.max_val, image_in);
+
   // Read Data
-
+  
   char data_1[image.width*image.height];
-  int size;
-  size = image.width*image.height;
-  std::cout << "Size: " << size;
   image_in.read(data_1, image.width*image.height);
-  std::cout << data_1 << std::endl;
-
+  // std::cout << data_1 << std::endl;
 
   image_in.close();
   std::cout << "Image is closing" << std::endl;
 
-  // ReadPGMImageHeader(image.type, image.width, image.height, image.max_val, image_in);
   return true;
 }
 
