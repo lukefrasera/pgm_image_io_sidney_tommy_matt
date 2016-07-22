@@ -1,22 +1,26 @@
 #include <iostream>
+#include <string>
 #include <fstream>
-#include <stdint.h>
+#include <stdio.h>
+#include <cstdlib>
 
 struct PgmImage {
+  std::string type;
+  std::string comment;
+  int width, height, max_val;
   unsigned char *data;
-  int width, height;
-  int max_val;
+  char data_1;
 };
 
 bool InitPGMImage(PgmImage &image);
 
 bool AllocatePGMImage(PgmImage &image, int max_val, int w, int h);
 
-bool ReadPGMImageHeader(std::string &type, int &w, int &h, int &max_val, std::ifstream &fin);
+bool ReadPGMImageHeader(std::string image_type, int &w, int &h, int &max_val, std::ifstream &fin);
 
-bool ReadPGMImage(PgmImage &image, std::string filename);
+bool ReadPGMImage(PgmImage &image, std::string filename, std::string output_filename);
 
-bool WritePGMImage(PgmImage image, std::string filename);
+bool WritePGMImage(PgmImage image, std::string output_filename);
 
 bool DeletePGMImage(PgmImage &image);
 
@@ -26,14 +30,16 @@ int main(int argc, char** argv) {
   InitPGMImage(image);
   if (argc < 3) {
     std::cout << "ERROR: Not enough Parameters\n"
-                 "Usage: ./[executable] <input_image> <output_iamge>"
+                 "Usage: ./[executable] <input_image> <output_image>"
               << std::endl;
     return -1;
   }
   std::string filename = argv[1];
   std::string output_filename = argv[2];
-  // Read image data into image
-  ReadPGMImage(image, filename);
+
+  AllocatePGMImage(image, image.max_val, image.width, image.height);
+  // Read image data_luke_why into image
+  ReadPGMImage(image, filename, output_filename);
   // Write image out to new file
   WritePGMImage(image, output_filename);
 
@@ -82,25 +88,77 @@ bool DeletePGMImage(PgmImage &image) {
   return true;
 }
 
-bool ReadPGMImageHeader(std::string &type, int &w, int &h, int &max_val, std::ifstream &fin) {
+bool ReadPGMImageHeader(std::string type, int &w, int &h, int &max_val, std::ifstream &image_in) {
+  
   return true;
 }
 
-bool ReadPGMImage(PgmImage &image, std::string filename) {
+bool ReadPGMImage(PgmImage &image, std::string filename, std::string output_filename) {
   // Open File to read
-  std::ifstream fin(filename.c_str(), std::ifstream::binary);
-  std::string image_type;
-  int width, height, max_val;
+  std::ifstream image_in(filename.c_str(), std::ifstream::binary);
+
+  if (image_in.is_open()) {
+    std::cout << "Image is opening" << std::endl;
+  } else {
+    std::cout << "Image isn't opening" << std::endl;
+  }
   
   // Read Image header
-  ReadPGMImageHeader(image_type, width, height, max_val, fin);
 
-  // Read Image data
+  // Read Image Type
+  getline(image_in, image.type,'\n');
+  std::cout << image.type << std::endl;
+
+  // Read Comment
+  getline(image_in, image.comment,'\n');
+  std::cout << image.comment << std::endl;
+
+  // Read Width and Height
+  image_in >> image.width;
+  std::cout << image.width << " ";
+  image_in.get();
+
+  image_in >> image.height;
+  image_in.get();
+  std::cout << image.height << std::endl;
+
+  // Read Max Value
+
+  image_in >> image.max_val;
+  image_in.get();
+  std::cout << image.max_val << std::endl;
+
+  // Read Data
+
+  char data_1[image.width*image.height];
+  int size;
+  size = image.width*image.height;
+  std::cout << "Size: " << size;
+  image_in.read(data_1, image.width*image.height);
+  std::cout << data_1 << std::endl;
 
 
+  image_in.close();
+  std::cout << "Image is closing" << std::endl;
+
+  // ReadPGMImageHeader(image.type, image.width, image.height, image.max_val, image_in);
   return true;
 }
 
-bool WritePGMImage(PgmImage image, std::string filename) {
+bool WritePGMImage(PgmImage image, std::string output_filename) {
+
+  // Writing PGM Image
+
+  std::ofstream image_out;
+  image_out.open(output_filename.c_str());
+
+  image_out << image.type << std::endl;
+  image_out << image.comment << std::endl;
+  image_out << image.width <<" ";
+  image_out << image.height << std::endl;
+  image_out << image.max_val <<std::endl;
+  image_out << image.data_1;
+
+  image_out.close();
   return true;
 }
