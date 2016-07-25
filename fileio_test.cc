@@ -1,8 +1,5 @@
 #include <iostream>
-#include <string>
 #include <fstream>
-#include <stdio.h>
-#include <cstdlib>
 #include <stdint.h>
 
 struct PgmImage {
