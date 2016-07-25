@@ -10,7 +10,8 @@ struct PgmImage {
   std::string comment;
   int width, height, max_val;
   unsigned char *data;
-  char data_1[100000];
+  // char data_1[];
+  // std::string data_str;
 };
 
 bool InitPGMImage(PgmImage &image);
@@ -39,7 +40,7 @@ int main(int argc, char** argv) {
   std::string output_filename = argv[2];
 
   AllocatePGMImage(image, image.max_val, image.width, image.height);
-  // Read image data_luke_why into image
+  // Read image data into image
   ReadPGMImage(image, filename, output_filename);
   // Write image out to new file
   WritePGMImage(image, output_filename);
@@ -134,14 +135,27 @@ bool ReadPGMImage(PgmImage &image, std::string filename, std::string output_file
 
   // Read Data
 
-  char data_1[image.width*image.height];
-  image_in.read(data_1, image.width*image.height);
-  std::cout << data_1 << std::endl;
+  image_in.read(image.data, image.width*image.height);
+  std::cout << "IMAGE DATA: " << image.data;
+
+  // getline(image_in, image.data_str,'\n');
+  // std::cout << "IMAGE DATA STR: " << image.data_str;
+  // image_in >> image.data_1;
+  // image_in.get();
+
+  // getline(image_in, image.data_1,'\n');
+  // std::cout << image.data_str << std::endl;
+
+  // image_in.read(image.data_1, image.width*image.height);
+  // std::cout << image.data_1 << std::endl;
+
+  // image_in.read(data_1, image.width*image.height);
+  // std::cout << data_1 << std::endl;
 
   image_in.close();
   std::cout << "Image is closing" << std::endl;
 
-  return true;
+  return 0;
 }
 
 bool WritePGMImage(PgmImage image, std::string output_filename) {
@@ -156,7 +170,7 @@ bool WritePGMImage(PgmImage image, std::string output_filename) {
   image_out << image.width <<" ";
   image_out << image.height << std::endl;
   image_out << image.max_val <<std::endl;
-  image_out << image.data_1;
+  image_out << image.data;
 
   image_out.close();
   return true;
