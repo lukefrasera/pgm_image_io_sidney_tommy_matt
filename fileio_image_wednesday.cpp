@@ -174,7 +174,7 @@ bool WritePGMImage(PgmImage image, std::string filename) {
   // fout << "# Comment goes here" << std::endl;
   fout << image.width <<" ";
   fout << image.height << std::endl;
-  fout << image.max_val << std::endl;
+  fout << image.max_val;
   fout.write((char*)image.data, image.width*image.height);
 
   fout.close();
