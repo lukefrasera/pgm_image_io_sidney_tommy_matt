@@ -1,3 +1,5 @@
+// blank template 
+
 #include <iostream>
 #include <fstream>
 #include <stdint.h>
@@ -102,6 +104,5 @@ bool ReadPGMImage(PgmImage &image, std::string filename) {
 }
 
 bool WritePGMImage(PgmImage image, std::string filename) {
-  image_out.write((char*)image.data, image.size * image.width)
   return true;
 }
